@@ -1,0 +1,24 @@
+---
+const { posts } = Astro.props;
+import { formatDate, excerpt } from "../utils/formatters.js"
+---
+
+<!--
+I render a list of blog posts
+-->
+
+{posts.map((post: any) => 
+
+		<article class="post-card">
+			<h2><a href={post.url}>{post.frontmatter.title}</a></h2>
+			<div class="post-meta">
+				<time datetime="{ post.frontmatter.date }">{ formatDate(post.frontmatter.date) }</time>
+				<span class="categories">
+                    { post.frontmatter.categories.map((c:any) => <a href={"/tags/" + c}>{c}</a>)}
+				</span>
+			</div>
+			<p class="post-excerpt" set:html={excerpt(post)}></p>
+		</article>
+
+)}
+</ul>

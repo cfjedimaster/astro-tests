@@ -1,0 +1,75 @@
+---
+
+import '../css/styles.css';
+import '../css/prism.css';
+
+const { pageTitle } = Astro.props;
+
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{pageTitle}</title> 
+    
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+</head>
+
+<body class="line-numbers">
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <h1><a href="/">Raymond Camden</a></h1>
+                <p class="tagline">Code and Cats</p>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="/" >Home</a></li>
+                    <li><a href="/about" >About</a></li>
+                    <li><a href="/speaking" >Speaking</a></li>
+                    <li><a href="/stuff" >Stuff</a></li>
+                </ul>
+                <div class="search-box">
+                    <input type="text" placeholder="Search posts..." id="search">
+                    <button type="button">🔍</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+
+        <slot/>
+
+        </div>
+    </main>
+
+    
+    <footer class="footer">
+        <div class="container">
+            <p>
+                
+            &copy; { new Date().getFullYear() } Raymond Camden. 
+            Powered by <a href="https://astro.build/">Astro</a>.
+            </p>
+            <div class="social-links">
+                <a href="/now">Now</a>
+                <a href="https://github.com/cfjedimaster">GitHub</a>
+                <a href="https://youtube.com/user/theraymondcamden">YouTube</a>
+                <a href="https://mastodon.social/@raymondcamden">Mastodon</a>
+                <a href="https://linkedin.com/in/raymondcamden">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+    <!-- 
+    <script src="/js/custom.js"></script>
+    <script src="/js/prism.js"></script>
+    <script type="module" src="/js/sparkly-text.js"></script>
+    -->
+</body>
+</html>
