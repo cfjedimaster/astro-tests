@@ -1,3 +1,76 @@
-im post
+---
+import BaseLayout from "./BaseLayout.astro";
+import { formatDate } from "../utils/formatters.js"
 
-<slot />
+const { frontmatter } = Astro.props;
+
+let banner_image = "";
+if(frontmatter.banner_image) {
+    banner_image = "https://static.raymondcamden.com" + frontmatter.banner_image;
+    console.log(banner_image);
+}
+---
+
+<BaseLayout pageTitle={frontmatter.title}>
+
+<article class="post-content">
+	<header class="post-header">
+		<h1>{ frontmatter.title}</h1>
+		<div class="post-meta">
+			<time datetime="{ fontmatter.date }">{ formatDate(frontmatter.date) }</time>
+<!--
+            <span class="categories">
+				{% for cat in categories %}
+					<a href="/categories/{{ cat | downcase | myEscape}}">{{cat}}</a>
+				{% endfor %}
+				{% for tag in tags %}
+					<a href="/tags/{{ tag | myEscape}}">{{tag}}</a>
+				{% endfor %}
+			</span>
+        -->
+
+		</div>
+	</header>
+
+    <div class="post-body">
+        
+        { banner_image !== '' ?
+            <picture>
+                <source media="(max-width: 799px)" srcset="https://res.cloudinary.com/raymondcamden/image/fetch/c_fit,w_360/{ banner_image }" width="360">
+                <source media="(min-width: 800px)" srcset="https://res.cloudinary.com/raymondcamden/image/fetch/c_fit,w_800/{ banner_image }" width="800">
+                <img src={ "https://res.cloudinary.com/raymondcamden/image/fetch/c_fit,w_800/" + banner_image} alt="" width="800">
+            </picture> : ""
+        }
+        <slot />
+
+	</div>
+
+	<footer class="post-footer">
+
+
+		<div class="footer-box">
+			<h3>Support this Content!</h3>
+			<p>
+			If you like this content, please consider supporting me. You can become a <a href="https://www.patreon.com/raymondcamden">Patron</a>,
+			visit my <a href="http://www.amazon.com/gp/registry/wishlist/2TCL1D08EZEYE/ref=cm_wl_rlist_go_v?">Amazon wishlist</a>, 
+			or <a href="https://www.buymeacoffee.com/raymondcamden">buy me a coffee</a>! Any support helps!
+			</p>
+			<p>
+			Want to get a copy of every new post? Use the form below to sign up for my newsletter.
+			</p>
+			<p id="subStatus"></p>
+			<form>
+			<div class="input-group">
+				<input type="email" name="email" class="input" placeholder="Your email address" id="subEmail"> 
+				<button class="btn" id="subButton" type="submit">Subscribe</button>
+			</div>
+			</form>
+
+		</div>
+
+
+	</footer>
+</article>    
+
+
+</BaseLayout>
