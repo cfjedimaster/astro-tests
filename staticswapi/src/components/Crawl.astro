@@ -1,0 +1,38 @@
+---
+import { romanize } from "@utils/formatters.js";
+
+
+const { text, title, episode } = Astro.props;
+console.log('epi', episode);
+---
+<style>
+div {
+    font-family: "Droid Sans", arial, verdana, sans-serif;
+    text-align: justify;
+    display:grid; 
+    place-items: center;
+    white-space: pre;
+    background-color: black;
+    background: url("/stars-bg.jpg");
+    color: #feda4a;
+    font-size: 120%;
+    font-weight: 600;
+    letter-spacing: 6px;
+    line-height: 150%;
+    padding: 10px;
+}
+
+div.header {
+    text-align: center;
+    margin-top: 0px;
+}
+
+
+</style>
+
+<div>
+<div class="header">Episode {romanize(episode)}</div>
+<div class="header">{title}</div>{text}
+</div>
+
+<hr>

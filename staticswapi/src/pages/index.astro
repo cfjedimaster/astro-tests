@@ -1,0 +1,20 @@
+---
+import MainLayout from "@layouts/MainLayout.astro";
+
+import { getCollection } from 'astro:content';
+const films = await getCollection('films');
+console.log(films);
+---
+
+<MainLayout pageTitle="Static SWAPI">
+
+	<ul>
+		<li>
+			Films
+			<ul>
+				{ films.map((f:any) => <li><a href={"/films/"+f.id}>{f.data.title}</a></li>)}
+			</ul>
+		</li>
+	</ul>
+
+</MainLayout>

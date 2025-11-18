@@ -1,0 +1,46 @@
+---
+import MainLayout from "@layouts/MainLayout.astro";
+import Crawl from "@components/Crawl.astro";
+import { formatDate } from "@utils/formatters.js";
+
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const films = await getCollection('films');
+  return films.map(film => ({
+    params: { id: film.id },
+    props: { film },
+  }));
+}
+
+const people = await getCollection('people');
+const { film } = Astro.props;
+---
+
+<MainLayout pageTitle={film.data.title}>
+  <p>
+  Released on { formatDate(film.data.release_date) } <br/>
+  Directed by { film.data.director } <br/>
+  Produced by { film.data.producer}. <br/>
+  </p>
+
+  <Crawl text={film.data.opening_crawl} title={film.data.title} episode={film.data.episode_id} />
+
+
+  <h2>Characters</h2>
+
+  <ul>
+    { 
+      film.data.characters.map(character => {
+        const person = people.find(p => p.id == character) || '';
+        // note use of ==, not ===. p.id is a string
+        return person;
+      }).sort((a,b) => {
+        return a.data.name.localeCompare(b.data.name);
+      }).map(person => {
+        return <li><a href={"/people/"+person.id}>{person.data.name}</li>
+      })
+    }
+  </ul>  
+
+</MainLayout>

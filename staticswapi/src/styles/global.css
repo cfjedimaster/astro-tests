@@ -1,0 +1,15 @@
+body {
+ 
+}
+
+header {
+    padding: 10px;
+    position: sticky; 
+    top: 0;
+    background: gray;
+    z-index:1;
+
+    .button {
+        margin-bottom: 0rem;
+    }
+}

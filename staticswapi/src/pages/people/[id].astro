@@ -1,0 +1,28 @@
+---
+import MainLayout from "@layouts/MainLayout.astro";
+import { formatDate } from "@utils/formatters.js";
+
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const people = await getCollection('people');
+  return people.map(people => ({
+    params: { id: people.id },
+    props: { people },
+  }));
+}
+
+const { people } = Astro.props;
+console.log(people);
+---
+
+<MainLayout pageTitle={people.data.name}>
+
+    <p>
+        Born: {people.data.birth_year}<br/>
+        Gender: {people.data.gender}<br/>
+        Skin Color: {people.data.skin_color}<br/>
+        Hair Color: {people.data.hair_color}<br/>
+        Eye Color: {people.data.eye_color}<br/>
+    </p>
+</MainLayout>
