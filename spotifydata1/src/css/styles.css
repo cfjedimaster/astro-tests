@@ -1,0 +1,18 @@
+body {
+    font-family: var(--sl-font-sans);
+    margin: 25px;
+}
+
+#loading {
+    font-style: italic;
+}
+
+.topStuff {
+    display: flex;
+    justify-content: space-around;
+
+}
+
+table {
+    width: 500px;
+}

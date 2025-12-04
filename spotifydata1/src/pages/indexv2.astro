@@ -1,0 +1,189 @@
+---
+import '../css/styles.css'
+---
+
+<html lang="en" class="sl-theme-dark">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/dark.css" />
+		<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"></script>
+	</head>
+	<body>
+		<h1>Spotify Data V1</h1>
+
+		<div id="loading"></div>
+		<div id="summary">
+		</div>
+		<div style="display:none" id="dateFilters">
+			Filter results from <input type="date" id="fromDate"> to <input type="date" id="toDate">.
+			<div class="topStuff">
+				<div>
+					<h2>Top Artists</h2>
+					<div id="topArtists"></div>
+				</div>
+				<div>
+					<h2>Top Tracks</h2>
+					<div id="topTracks"></div>
+				</div>
+			</div>
+		</div>
+		<script>
+		document.addEventListener('DOMContentLoaded', init, false);
+		let $loading, $summary, $topArtists, $topTracks, $fromDate, $toDate;
+		let data;
+
+		async function init() {
+			$loading = document.querySelector('#loading');
+			$summary = document.querySelector('#summary');
+			$topArtists = document.querySelector('#topArtists');
+			$topTracks = document.querySelector('#topTracks');
+			$fromDate = document.querySelector('#fromDate');
+			$toDate = document.querySelector('#toDate');
+
+			$loading.innerHTML = "Loading data...";
+
+			let req = await fetch('./data.json');
+			data = await req.json();
+			data = data.sort((a,b) => {
+				return new Date(a) - new Date(b);
+			});
+
+			$loading.innerHTML = "";
+			document.querySelector('#dateFilters').style.display = 'block';
+
+			renderStats();
+
+			$fromDate.addEventListener('change', renderStats);
+			$toDate.addEventListener('change', renderStats);
+
+		}
+
+		async function renderStats() {
+
+			let d = data;
+			// filter by date range		
+			if($fromDate.value) {
+				console.log('filtering to after', $fromDate.value);
+				d = d.filter(x => new Date(x.ts) >= new Date($fromDate.value));
+			}
+
+			if($toDate.value) {
+				console.log('filtering to before', $toDate.value);
+				d = d.filter(x => new Date(x.ts) <= new Date($toDate.value));
+			}
+
+
+			let totalTime = d.reduce((acc, x) => {
+				return acc + x['ms_played']
+			},0);
+			let hours = Math.floor(totalTime / 1000 / 60 / 60);
+
+			// render summary while we work on other stuff
+			$summary.innerHTML = `
+<p>
+	Data consists of ${numberFormat(d.length)} total tracks. The first track was recorded 
+	${dateFormat(d[0].ts)} and the last track was recorded ${dateFormat(d[d.length-1].ts)}.
+	You've listened for a total of ${numberFormat(hours)} hours.
+</p>
+			`;
+
+			let topArtists = getTopArtists(d);
+			let topA = `
+			<table>
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Tracks</td>
+					</tr>
+				</thead>
+				<tbody>
+			`;
+			for(let i=0;i < Math.min(20, topArtists.length); i++) {
+				topA += `
+				<tr><td>${topArtists[i].name}</td><td>${numberFormat(topArtists[i].count)}</td></tr>				
+				`;
+			}
+
+			topA += '</tbody></table>';
+			$topArtists.innerHTML = topA;
+
+			let topTracks = getTopTracks(d);
+			let topT = `
+			<table>
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Listens</td>
+					</tr>
+				</thead>
+				<tbody>
+			`;
+			for(let i=0;i < Math.min(20, topTracks.length); i++) {
+				topT += `
+				<tr><td>${topTracks[i].name} (${topTracks[i].artist})</td><td>${numberFormat(topTracks[i].count)}</td></tr>				
+				`;
+			}
+
+			topT += '</tbody></table>';
+			$topTracks.innerHTML = topT;
+
+		}
+
+		function getTopArtists(data) {
+			let artists = {};
+			for(let a of data) {
+				if(!artists[a['master_metadata_album_artist_name']]) {
+					artists[a['master_metadata_album_artist_name']] = 0;
+				}
+				artists[a['master_metadata_album_artist_name']] += 1;
+			}
+
+			// convert to array 
+			let artistsArr = [];
+			for(let a in artists) artistsArr.push({name:a, count:artists[a]});
+
+			return artistsArr.sort((a, b) => {
+				return b.count - a.count;
+			});
+		}
+
+		function getTopTracks(data) {
+			let tracks = {};
+			for(let a of data) {
+				if(!tracks[a['master_metadata_track_name']]) {
+					tracks[a['master_metadata_track_name']] = { count:0, artist: a['master_metadata_album_artist_name']};
+				}
+				tracks[a['master_metadata_track_name']].count += 1;
+			}
+
+			// convert to array 
+			let tracksArr = [];
+			for(let t in tracks) tracksArr.push({name:t, count:tracks[t].count, artist: tracks[t].artist});
+
+			return tracksArr.sort((a, b) => {
+				return b.count - a.count;
+			});
+		}
+
+		function numberFormat(x) {
+			return new Intl.NumberFormat().format(x);
+		}
+
+		function dateFormat(x) {
+			return new Intl.DateTimeFormat(navigator.language, {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+				hour: 'numeric',
+				minute: 'numeric',
+				second: 'numeric',
+			}).format(new Date(x));
+		}
+
+		</script>
+	</body>
+</html>
