@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { toTitleCase } from '../../utils/formatter.js';
+
+export async function getStaticPaths() {
+    const snippets = await getCollection('snippets');
+    let tagPages = {};
+
+    snippets.forEach((snippet) => {
+        snippet.data.tags.forEach((tag) => {
+            if (!tagPages[tag]) {
+                tagPages[tag] = [];
+            }
+            tagPages[tag].push(snippet);
+        });
+    });
+
+    return Object.keys(tagPages).map((tag) => ({
+        params: { id: tag },
+        props: { tag, pages:tagPages[tag] },
+    }));
+}
+
+const { tag, pages } = Astro.props;
+---
+
+<BaseLayout pageTitle={toTitleCase(tag)}>
+
+    <ul>
+{pages.map(snippet => (
+	<li><a href=`/snippets/${snippet.id}`>{snippet.data.title}</a></li>
+))}
+</ul>
+
+</BaseLayout>

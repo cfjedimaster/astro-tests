@@ -1,0 +1,33 @@
+---
+import { Code } from 'astro:components';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const snippets = await getCollection('snippets');
+  return snippets.map(snippet => ({
+    params: { id: snippet.id },
+    props: { snippet },
+  }));
+}
+
+const { snippet } = Astro.props;
+---
+
+<BaseLayout pageTitle={snippet.data.title}>
+
+<p>
+  Tags:
+  {snippet.data.tags.map(tag => (
+    <a href=`/tags/${tag}` class="tag">{tag} </a>
+  ))}
+</p>
+
+<h3>Code</h3>
+
+<Code code={snippet.body} lang="html" />
+
+<h3>Output</h3>
+<div set:html={snippet.body}></div>
+
+</BaseLayout>

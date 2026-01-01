@@ -1,0 +1,15 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+const allSnippets = await getCollection('snippets');
+---
+
+<BaseLayout pageTitle="Welcome">
+
+<ul>
+{allSnippets.map(snippet => (
+	<li><a href=`snippets/${snippet.id}`>{snippet.data.title}</a></li>
+))}
+</ul>
+
+</BaseLayout>

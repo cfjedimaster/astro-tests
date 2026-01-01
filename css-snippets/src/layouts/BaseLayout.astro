@@ -1,0 +1,35 @@
+---
+import '../css/app.css';
+
+const { pageTitle } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Snippets - {pageTitle}</title> 
+    
+    <meta name="generator" content={Astro.generator} />
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+
+<body class="line-numbers">
+
+    <header>
+    <h1>CSS Snippets</h1>
+    </header>
+
+    <main>
+        <h2>{pageTitle}</h2>
+    <slot/>
+    </main>
+
+    <footer>
+        <p>
+        <a href="/">Home</a>
+        </p>
+    </footer>
+</body>
+</html>
