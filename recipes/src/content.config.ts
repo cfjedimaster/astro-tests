@@ -1,6 +1,5 @@
 import { defineCollection } from 'astro:content';
 import fs from 'node:fs/promises';
-//import { glob } from 'astro/loaders';
 
 function parseRecipe(txt:string) {
 	let result:any = {};
@@ -24,8 +23,8 @@ function parseRecipe(txt:string) {
 	for(let key of Object.keys(result)) result[key.toLowerCase().replace(/ /g,'')] = result[key];
 
 	// special handle for ingredients and instructions to turn into arrays
-	if(result.ingredients) result.ingredients = result.ingredients.split('\n').map(i => i.trim()).filter(i => i.length > 0);
-	if(result.instructions) result.instructions = result.instructions.split('\n').map(i => i.trim()).filter(i => i.length > 0);
+	if(result.ingredients) result.ingredients = result.ingredients.split('\n').map((i:string) => i.trim()).filter((i:string) => i.length > 0);
+	if(result.instructions) result.instructions = result.instructions.split('\n').map((i:string) => i.trim()).filter((i:string) => i.length > 0);
 	return result;
 
 }
