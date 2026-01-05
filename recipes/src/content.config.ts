@@ -8,7 +8,7 @@ function parseRecipe(txt:string) {
 	let lines = txt.split('\n');
 
 	for(let i=0;i<lines.length;i++) {
-		//if the line starts with a tab, its a continutation
+		//if the line starts with a tab, its a continuation
 		if(lines[i].indexOf('\t') === 0) {		
 			result[lastKey] += lines[i].replace('\t', '') + '\n';
 		} else {
