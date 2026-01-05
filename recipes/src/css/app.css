@@ -1,0 +1,180 @@
+/* General Body Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: hsl(30, 100%, 98%); /* Very light cream/off-white */
+    color: hsl(0, 0%, 30%); /* Dark gray for readability */
+    line-height: 1.6;
+}
+
+/* Main Container for Recipes */
+.recipe-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff; /* Pure white for content area */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Individual Recipe Card */
+.recipe-card {
+    margin-bottom: 50px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid hsl(330, 20%, 90%); /* Light pink border for separation */
+}
+
+.recipe-card:last-child {
+    border-bottom: none; /* No border for the last recipe */
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Recipe Title */
+.recipe-title {
+    font-family: 'Georgia', serif;
+    color: hsl(330, 60%, 50%); /* A vibrant pink for headings */
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+/* Recipe Description */
+.recipe-description {
+    font-size: 1.1em;
+    color: hsl(0, 0%, 40%);
+    margin-bottom: 20px;
+    text-align: center;
+    font-style: italic;
+}
+
+/* Recipe Source */
+.recipe-source {
+    font-size: 0.9em;
+    color: hsl(0, 0%, 50%);
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+
+/* Section Headings (Ingredients, Instructions) */
+h3 {
+    color: hsl(330, 60%, 50%); /* Matching the recipe title pink */
+    font-size: 1.8em;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid hsl(330, 70%, 85%); /* Light, soft pink underline */
+    padding-bottom: 5px;
+}
+
+/* Ingredients List */
+.ingredient-list {
+    list-style-type: none; /* Remove default bullet points */
+    padding: 0;
+    margin: 0;
+}
+
+.ingredient-list li {
+    background-color: hsl(330, 10%, 97%); /* Very light pink background for list items */
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ingredient-list li::before {
+    content: '•'; /* Custom bullet point */
+    color: hsl(330, 60%, 70%); /* Accent pink for bullets */
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    margin-right: 0.5em;
+}
+
+/* Instructions List */
+.instruction-list {
+    list-style-type: decimal; /* Numbered list */
+    padding-left: 25px;
+    margin: 0;
+}
+
+.instruction-list li {
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-bottom: 1px dashed hsl(330, 20%, 90%); /* Dashed light pink separator */
+}
+
+.instruction-list li:last-child {
+    border-bottom: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .recipe-container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .recipe-title {
+        font-size: 2em;
+    }
+
+    h3 {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .recipe-container {
+        padding: 15px;
+    }
+
+    .recipe-title {
+        font-size: 1.8em;
+    }
+
+    .recipe-description {
+        font-size: 1em;
+    }
+
+    h3 {
+        font-size: 1.3em;
+    }
+}
+
+/* Main Header Navigation */
+.main-header {
+    background-color: #ffffff;
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    margin-bottom: 40px;
+    border-bottom: 1px solid hsl(330, 20%, 90%);
+}
+
+.main-header nav {
+    max-width: 900px; /* Matches .recipe-container width */
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.main-header .nav-link {
+    color: hsl(330, 60%, 50%); /* Uses the theme's pink accent color */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2em;
+    transition: color 0.3s ease;
+}
+
+.main-header .nav-link:hover {
+    color: hsl(330, 60%, 40%); /* Darkens the pink on hover */
+}

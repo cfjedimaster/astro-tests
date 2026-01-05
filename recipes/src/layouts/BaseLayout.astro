@@ -1,0 +1,26 @@
+---
+import '../css/app.css';
+
+const { pageTitle } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes - {pageTitle}</title> 
+    
+    <meta name="generator" content={Astro.generator} />
+</head>
+
+<body>
+    <header class="main-header">
+        <nav>
+            <a href="/" class="nav-link">Home</a>
+        </nav>
+    </header>
+    <slot/>
+
+</body>
+</html>

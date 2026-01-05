@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allRecipes = await getCollection('recipes');
+---
+
+<BaseLayout pageTitle="Recipes">
+  <div class="recipe-container">
+    <h1 class="recipe-title" style="font-size: 2.8em; margin-bottom: 40px;">All Recipes</h1>
+    {allRecipes.map((recipe) => (
+      <div class="recipe-card">
+        <h2
+          class="recipe-title"
+          style="font-size: 2em; text-align: left; margin-bottom: 10px;"
+        >
+          <a href={`/recipes/${recipe.id}`} style="text-decoration: none; color: inherit;">
+            {recipe.data.recipe.title}
+          </a>
+        </h2>
+        {recipe.data.recipe.description && (
+          <p class="recipe-description" style="text-align: left; font-style: normal;">
+            {recipe.data.recipe.description}
+          </p>
+        )}
+      </div>
+    ))}
+  </div>
+</BaseLayout>
