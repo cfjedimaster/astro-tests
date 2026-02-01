@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout pageTitle="Your Feeds">
+
+	<div id="content">
+	
+	</div>
+
+	<dialog id="manageFeedsDialog">
+		<button autofocus style="float: right;margin-bottom: 15px">Close</button>
+		<table id="feedsTableDialog">
+			<thead>
+				<tr>
+					<th>Feed URL</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+
+		<p>
+			<input type="url" id="feedUrl" placeholder="Enter Feed URL" />
+			<button id="addFeedButton">Add Feed</button>
+		</p>
+	</dialog>
+
+	<script src="/app.js" is:inline></script>
+
+</BaseLayout>
+
