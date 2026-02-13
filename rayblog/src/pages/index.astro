@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatDate, excerpt } from "../utils/formatters.js"
+
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts  = posts.sort((a, b) => {
+	return new Date(b.data.date)-new Date(a.data.date);
+}).slice(0,10);
+
+---
+
+<BaseLayout pageTitle="Blog">
+
+	{ sortedPosts.map((post:any) => 
+	<div>
+		<h3><a href={ `/posts/${post.id}` }>{post.data.title}</a></h3>
+		<p><i>Published { formatDate(post.data.date)}</i></p>
+		<p set:html={ excerpt(post.rendered.html)}></p>
+	</div>
+	)}
+	<p>
+		<a href="all.html">Every Post Ever</a>
+	</p>
+</BaseLayout>
