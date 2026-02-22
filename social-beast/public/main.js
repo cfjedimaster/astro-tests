@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Begin by checking the status of the 3 networks
     checkMastodonStatus();
-    //checkBlueskyStatus();
+    checkBlueskyStatus();
     //checkThreadsStatus();
 
     $postButton.addEventListener('click', handlePost);
@@ -52,6 +52,30 @@ async function checkMastodonStatus() {
         $mastodonStatus.textContent = 'Error';
         $mastodonStatus.classList.remove('secondary');
         $mastodonStatus.classList.add('danger');
+    }
+}
+
+async function checkBlueskyStatus() {
+    try {
+        const response = await fetch('/api/bluesky/check.json');
+        const data = await response.json();
+        if (data.ready) {
+            $blueskyStatus.textContent = 'Connected';
+            $blueskyStatus.classList.remove('secondary');
+            $blueskyStatus.classList.add('success');
+            BLUESKY = true;
+        } else {
+            $blueskyStatus.textContent = 'Not Connected';
+            $blueskyStatus.classList.remove('secondary');
+            $blueskyStatus.classList.add('danger');
+            $blueskyStatus.title = data.error || 'Unknown error';
+            console.error(data.error);
+        }
+    } catch (error) {
+        console.error('Error checking Bluesky status:', error);
+        $blueskyStatus.textContent = 'Error';
+        $blueskyStatus.classList.remove('secondary');
+        $blueskyStatus.classList.add('danger');
     }
 }
 
