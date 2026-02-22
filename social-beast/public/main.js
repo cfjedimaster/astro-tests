@@ -2,7 +2,7 @@
 let $mastodonStatus;
 let $blueskyStatus;
 let $threadsStatus;
-let $postButton, $postContent;
+let $postButton, $postContent, $postImage, $altText, $imagePreview;
 let $activityFeed;
 
 let MASTODON = false;
@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $threadsStatus = document.querySelector('#threadsStatus');
     $postButton = document.querySelector('#postButton');
     $postContent = document.querySelector('#postContent');
+    $postImage = document.querySelector('#postImage');
+    $altText = document.querySelector('#altText');
+    $imagePreview = document.querySelector('#imagePreview');
     $activityFeed = document.querySelector('#activityFeed');
 
     // Begin by checking the status of the 3 networks
@@ -24,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //checkThreadsStatus();
 
     $postButton.addEventListener('click', handlePost);
+    $postImage.addEventListener('change', doPreview);
 
 });
 
@@ -52,6 +56,8 @@ async function checkMastodonStatus() {
 }
 
 async function handlePost() {
+    let post = {};
+
     // First, a sanity check
     if(!MASTODON && !BLUESKY && !THREADS) {
         ot.toast('No social networks are configured! Please set up at least one network to post.', 'Action Stopped', {
@@ -72,14 +78,30 @@ async function handlePost() {
         return;
     }
 
+    post.content = content;
+
+    let caption = $altText.value.trim();   
+    if($postImage.files.length > 0) {
+        if(!caption) {
+            ot.toast('Image requires alt text. Please add alt text for the image and try again.', 'Action Stopped', {
+                variant: 'danger',
+                duration: 3000
+            });
+            return;
+        }
+
+        post.image = await fileToBase64($postImage.files[0]);
+        post.altText = caption;
+    }
+
     $postButton.setAttribute('disabled', 'disabled');
     // Call all 3 networks, and wait for the results
     $activityFeed.innerHTML = 'Posting to enabled networks...';
 
     let results = [];
     
-    if(MASTODON) {
-        results.push(postToMastodon(content));
+    if(MASTODON && false) {
+        results.push(postToMastodon(post));
     }
 
     let settledResults = await Promise.allSettled(results);
@@ -97,19 +119,26 @@ async function handlePost() {
             resultHTML += `Error posting to a network: ${result.reason}`;
         }
     }
+
     $activityFeed.innerHTML = resultHTML;
+
+    // cleanup
     $postContent.value = '';
+    $postImage.value = '';
+    $altText.value = '';
+    $imagePreview.src = '';
+    $imagePreview.style.display = 'none';
     $postButton.removeAttribute('disabled');
 }
 
-async function postToMastodon(content) {
+async function postToMastodon(post) {
     try {
         const response = await fetch('/api/mastodon/post.json', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ content })
+            body: JSON.stringify({ post })
         });
         
         const data = await response.json();
@@ -121,4 +150,32 @@ async function postToMastodon(content) {
         console.error('Error posting to Mastodon:', error);
         return { network: 'Mastodon', success: false, error: error.message };
     }
+}
+
+async function doPreview() {
+    const file = $postImage.files[0];
+    if(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            $imagePreview.src = e.target.result;
+            $imagePreview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    } else {
+        $imagePreview.src = '';
+        $imagePreview.style.display = 'none';
+    }
+}
+
+async function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function() {
+            resolve(reader.result);
+        }
+        reader.onerror = function(error) {
+            reject(error);
+        }
+        reader.readAsDataURL(file);
+    });
 }

@@ -8,14 +8,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	<div class="row">
 		<div class="col-8">
 
-			<!-- This is where you define the post -->
+			<p>
 			<label for="postContent">What's on your mind?</label>
 			<textarea id="postContent"></textarea>
+			</p>
 
-			<!-- to do, pictures -->
+			<div class="row">
+				<div class="col-4">
+					<label for="postImage">Add an image (optional)</label>
+					<input type="file" id="postImage" accept="image/*">
+				</div>
+				<div class="col-4">
+					<label for="altText">Alt text for image (<strong>required</strong>)</label>
+					<input type="text" id="altText" placeholder="Describe the image for accessibility" value="Temp alt text">
+				</div>
+				<div class="col-4">
+					<img id="imagePreview" src="" alt="Image preview" style="max-width: 100%; display: none;">
+				</div>
+			</div>
 
+			<p>
 			<button id="postButton" class="mt-6">Post</button>
-
+			</p>
 		</div>
 		<div class="col-4">
 
