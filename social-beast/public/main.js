@@ -124,8 +124,12 @@ async function handlePost() {
 
     let results = [];
     
-    if(MASTODON && false) {
+    if(MASTODON) {
         results.push(postToMastodon(post));
+    }
+
+    if(BLUESKY) {
+        results.push(postToBluesky(post));
     }
 
     let settledResults = await Promise.allSettled(results);
@@ -135,12 +139,12 @@ async function handlePost() {
         if(result.status === 'fulfilled') {
             let data = result.value;
             if(data.ok) {
-                resultHTML += `Successfully posted to ${data.network}!`;
+                resultHTML += `Successfully posted to ${data.network}!<br>`;
             } else {
-                resultHTML += `Failed to post to ${data.network}: ${data.error}`;
+                resultHTML += `Failed to post to ${data.network}: ${data.error}<br>`;
             }
         } else {
-            resultHTML += `Error posting to a network: ${result.reason}`;
+            resultHTML += `Error posting to a network: ${result.reason}<br>`;
         }
     }
 
@@ -173,6 +177,27 @@ async function postToMastodon(post) {
     } catch (error) {
         console.error('Error posting to Mastodon:', error);
         return { network: 'Mastodon', success: false, error: error.message };
+    }
+}
+
+async function postToBluesky(post) {
+    try {
+        const response = await fetch('/api/bluesky/post.json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ post })
+        });
+        
+        const data = await response.json();
+        console.log('Bluesky post result:', data);
+        data.network = 'Bluesky';
+        return data;
+        
+    } catch (error) {
+        console.error('Error posting to Bluesky:', error);
+        return { network: 'Bluesky', success: false, error: error.message };
     }
 }
 

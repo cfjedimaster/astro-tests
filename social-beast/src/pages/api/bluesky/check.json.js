@@ -1,5 +1,6 @@
-const BLUESKY_USERNAME = process.env.BLUESKY_USERNAME;
-const BLUESKY_PASSWORD = process.env.BLUESKY_PASSWORD;
+import { loginToBluesky } from "./logon";
+
+export const prerender = false;
 
 export async function GET({ params, request }) {
 
@@ -7,35 +8,13 @@ export async function GET({ params, request }) {
     ready: false
   }
 
-  // check for env values 
-  if(!BLUESKY_USERNAME || !BLUESKY_PASSWORD) {
-    response.error = 'Missing env values for BLUESKY_USERNAME or BLUESKY_PASSWORD';
-  } else {
-
-    let body = {
-        identifier: BLUESKY_USERNAME,
-        password: BLUESKY_PASSWORD
-    };
-
-    await fetch('https://bsky.social/xrpc/com.atproto.server.createSession', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-    .then(res => {
-      if(res.ok) {
-        response.ready = true;
-      } else {
-        response.error = `Bluesky API error: ${res.status} ${res.statusText}`;
-      }
-    })
-    .catch(error => {
-      response.error = `Error connecting to Bluesky API: ${error.message}`;
-    })
+  let authCheck = await loginToBluesky();
+  if(authCheck && authCheck.auth) {
+    response.ready = true;
+  } else if(authCheck && authCheck.error) {
+    response.error = authCheck.error;
   }
-
+  
   return new Response(
     JSON.stringify(response),
   );

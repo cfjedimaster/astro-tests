@@ -1,3 +1,5 @@
+export const prerender = false;
+
 const MASTODON_TOKEN = process.env.MASTODON_TOKEN;
 const MASTODON_SERVER = process.env.MASTODON_SERVER;
 
