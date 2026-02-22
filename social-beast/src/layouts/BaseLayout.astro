@@ -1,0 +1,30 @@
+---
+const { pageTitle } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{pageTitle}</title> 
+    
+    <meta name="generator" content={Astro.generator} />
+    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css">
+    <style>
+        body {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+    <script src="/main.js" is:inline></script>
+</head>
+
+<body data-theme="dark">
+
+    <div class="container">
+    <slot/>
+    </div>
+
+</body>
+</html>

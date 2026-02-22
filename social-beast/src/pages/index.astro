@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout pageTitle="Social Beast">
+	<h1>Welcome to Social Beast</h1>
+
+	<div class="row">
+		<div class="col-8">
+
+			<!-- This is where you define the post -->
+			<label for="postContent">What's on your mind?</label>
+			<textarea id="postContent"></textarea>
+
+			<!-- to do, pictures -->
+
+			<button id="postButton" class="mt-6">Post</button>
+
+		</div>
+		<div class="col-4">
+
+			<article class="card">
+			<header>
+				<h3>Connection Status</h3>
+			</header>
+			<div class="row mb-6 items-center">
+				<div class="col-6">
+					Mastodon
+				</div>
+				<div class="col-6">
+					<span class="badge secondary" id="mastodonStatus">Unknown</span>
+				</div>
+			</div>
+			<div class="row mb-6 items-center">
+				<div class="col-6">
+					Bluesky
+				</div>
+				<div class="col-6">
+					<span class="badge secondary" id="blueskyStatus">Unknown</span>
+				</div>
+			</div>
+			<div class="row items-center">
+				<div class="col-6">
+					Threads
+				</div>
+				<div class="col-6">
+					<span class="badge secondary" id="threadsStatus">Unknown</span>
+				</div>
+			</div>
+			</article>
+
+			<article class="card mt-6">
+			<header>
+				<h3>Activity</h3>
+				<div id="activityFeed">
+					<p>No activity yet.</p>
+			</header>
+			</article>
+		</div>
+	</div>
+</BaseLayout>
