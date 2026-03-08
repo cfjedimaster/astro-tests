@@ -1,43 +1,38 @@
-# Astro Starter Kit: Minimal
+# Social Beast
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Social Beast is a web app meant to make it easier to post to multiple social networks at once. It is *not* meant to be run
+on a public web server, but rather run locally, opened in your browser, and used on your own machine. It supports posting
+to network with just text or text with an image. Currently, it supports:
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+* Mastodon
+* Bluesky
 
-## 🚀 Project Structure
+I had considered support for Threads, but I want to avoid oAuth, and Threads requires that. I could add oAuth support but honestly, it doesn't feel
+like it's worth the effort. I only mention it because maybe someone will see this and decide to add it anyway. If so, file a PR!
 
-Inside of your Astro project, you'll see the following folders and files:
+## Setup
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+After cloning the repo, run `npm i` to install dependencies. The application requires four different environment variables. 
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+For Mastodon:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+* MASTODON_TOKEN - a token created in the developer settings of your profile
+* MASTODON_SERVER - the server your account runs on, for example, https://mastodon.social
 
-Any static assets, like images, can be placed in the `public/` directory.
+For Bluesky:
 
-## 🧞 Commands
+* BLUESKY_USERNAME - your username
+* BLUESKY_PASSWORD - your password
 
-All commands are run from the root of the project, from a terminal:
+Technically, you don't need to supply all 4. The code will check to see which network has auth info and if one doesn't, it will simply not try to post to it. 
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Running
 
-## 👀 Want to learn more?
+`npm run dev` and open your browser to the specified port. That's it.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Changelog
+
+| Date | Change |
+|------|----------|
+| March 8, 2026 | Wrote the readme. Code was done before. Removed Thread mentions. |
+

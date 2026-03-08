@@ -1,19 +1,16 @@
 
 let $mastodonStatus;
 let $blueskyStatus;
-let $threadsStatus;
 let $postButton, $postContent, $postImage, $altText, $imagePreview;
 let $activityFeed;
 
 let MASTODON = false;
 let BLUESKY = false;
-let THREADS = false;
 
 document.addEventListener('DOMContentLoaded', function() {
 
     $mastodonStatus = document.querySelector('#mastodonStatus');
     $blueskyStatus = document.querySelector('#blueskyStatus');
-    $threadsStatus = document.querySelector('#threadsStatus');
     $postButton = document.querySelector('#postButton');
     $postContent = document.querySelector('#postContent');
     $postImage = document.querySelector('#postImage');
@@ -21,10 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $imagePreview = document.querySelector('#imagePreview');
     $activityFeed = document.querySelector('#activityFeed');
 
-    // Begin by checking the status of the 3 networks
+    // Begin by checking the status of the 2 networks
     checkMastodonStatus();
     checkBlueskyStatus();
-    //checkThreadsStatus();
 
     $postButton.addEventListener('click', handlePost);
     $postImage.addEventListener('change', doPreview);
