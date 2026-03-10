@@ -1,0 +1,34 @@
+---
+export const prerender = false; // Not needed in 'server' mode
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLiveEntry } from 'astro:content';
+const { entry, error } = await getLiveEntry('genres', Astro.params.id);
+
+if (error) {
+  return Astro.rewrite('/404');
+}
+
+const title = Astro.url.searchParams.get("l");
+---
+
+<BaseLayout pageTitle={title}>
+
+    <div class="movieWrapper">
+        { entry.data.map((movie:any) => 
+            <article class="movie">
+                <h3>{movie.title}</h3>
+                <p>
+                    {movie.overview}
+                </p>
+                <p>
+                    Releases {movie.release_date}
+                </p>
+                { movie.poster_path ?
+                <p><img src={"https://image.tmdb.org/t/p/w300/"+movie.poster_path}></p> : ''
+                }
+            </article>
+        )}
+    </div>
+
+</BaseLayout>

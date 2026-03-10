@@ -1,0 +1,18 @@
+---
+export const prerender = false; 
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLiveCollection } from 'astro:content';
+
+const { entries } = await getLiveCollection('genres');
+---
+
+<BaseLayout pageTitle="List of Genres">
+
+	<ul>
+		{ entries.map((genre:any) => 
+			<li><a href={"genre/" + genre.id + "?l=" + genre.data.name}>{genre.data.name}</a></li>
+		)}
+	</ul>
+
+</BaseLayout>
