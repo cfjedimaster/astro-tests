@@ -5,6 +5,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getLiveCollection } from 'astro:content';
 
 const { entries } = await getLiveCollection('genres');
+
+Astro.cache.set({
+  maxAge: 120, // Cache for 2 minutes
+  swr: 60, // Serve stale for 1 minute while revalidating
+});
+
 ---
 
 <BaseLayout pageTitle="List of Genres">

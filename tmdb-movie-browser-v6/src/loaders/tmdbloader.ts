@@ -39,7 +39,6 @@ export function genreLoader(config: { apiKey: string }): LiveLoader<Genre, Entry
     },
     loadEntry: async ({ filter }) => {
       console.log('loadEntry called with filter', filter);
-
       
       try {
         let movieReq = await fetch(`https://api.themoviedb.org/3/discover/movie?region=US&language=en-US&with_genres=${filter.id}&sort_by=primary_release_date.desc`, {
@@ -50,7 +49,7 @@ export function genreLoader(config: { apiKey: string }): LiveLoader<Genre, Entry
         });
 
         let movieData = await movieReq.json();
-
+        console.log(`Loaded movies for ${filter.id}`);
         return {
           id: filter.id,
           data: movieData.results
