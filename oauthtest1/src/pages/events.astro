@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+let token = await Astro.session?.get('access_token');
+
+/**
+ * Fetches Google Calendar events for the current month.
+ * @param {string} accessToken - A valid OAuth2 access token.
+ */
+async function getCalendarEventsForCurrentMonth(accessToken) {
+    const now = new Date();
+    
+    // Calculate start of current month
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    
+    // Calculate start of next month
+    const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString();
+
+    const calendarId = 'primary'; // Use 'primary' for the user's main calendar
+    const url = new URL(`https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`);
+    
+    // Set query parameters
+    url.searchParams.append('timeMin', startOfMonth);
+    url.searchParams.append('timeMax', startOfNextMonth);
+    url.searchParams.append('singleEvents', 'true'); // Expands recurring events into instances
+    url.searchParams.append('orderBy', 'startTime');
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(`Google API Error: ${data.error.message}`);
+        }
+
+        return data.items; // This is the array of event objects
+    } catch (error) {
+        console.error('Failed to fetch events:', error);
+    }
+}
+
+/**
+ * Calculates the total duration of timed Google Calendar events, skipping all-day events.
+ * @param {Array} events - The 'items' array from the Google Calendar API response.
+ * @returns {number} - Total duration in hours.
+ */
+function calculateTimedHours(events) {
+    if (!events || events.length === 0) return 0;
+
+    const totalMilliseconds = events.reduce((total, event) => {
+        // Skip all-day events (they have 'date' but no 'dateTime')
+        if (!event.start.dateTime || !event.end.dateTime) {
+            return total;
+        }
+
+        const start = new Date(event.start.dateTime);
+        const end = new Date(event.end.dateTime);
+
+        const duration = end.getTime() - start.getTime();
+
+        return total + (duration > 0 ? duration : 0);
+    }, 0);
+
+    const hours = totalMilliseconds / (1000 * 60 * 60);
+    
+    // Round to one decimal place and ensure it returns as a number
+    return Math.round(hours * 10) / 10;
+}
+
+const events = await getCalendarEventsForCurrentMonth(token);
+const totalHours = calculateTimedHours(events);
+
+---
+
+<BaseLayout pageTitle="Events">
+
+    <h2>Events</h2>
+
+    <p>
+        You have { events.length } events this month.
+    </p>
+
+    <p>
+        Ignoring all day events, you are spending { totalHours} hours in meetings.
+    </p>
+</BaseLayout>

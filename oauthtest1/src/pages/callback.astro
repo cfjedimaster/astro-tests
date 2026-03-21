@@ -1,0 +1,49 @@
+---
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URL = process.env.REDIRECT_URL;
+
+const code = Astro.url.searchParams.get('code') || '';
+const error = Astro.url.searchParams.get('error') || '';
+
+if(error !== '') {
+    // todo, handle error 
+    // maybe a flash msg and back to index
+    console.error('Error!!', error);
+    Astro.session?.set('error',error);
+    return Astro.redirect('/');
+}
+
+// get our access token
+const params = new URLSearchParams();
+params.append('client_id', CLIENT_ID);
+params.append('client_secret', CLIENT_SECRET);
+params.append('grant_type', 'authorization_code');
+params.append('redirect_uri', REDIRECT_URL);
+params.append('code', code);
+
+const atReq = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }, 
+    body: params
+});
+
+const at = await atReq.json();
+console.log('at', at);
+
+if(at.error) {
+    Astro.session?.set('error',at.error);
+    return Astro.redirect('/');
+}
+
+Astro.session?.set('access_token', at.access_token, { ttl: at.expires_in });
+// expires_in is in seconds, so let's create a date ob for it it
+let expiration = new Date();
+expiration.setSeconds(expiration.getSeconds() + at.expires_in);
+await Astro.session?.set('expiration', expiration);
+
+return Astro.redirect('/events');
+---
