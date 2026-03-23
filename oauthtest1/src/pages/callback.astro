@@ -7,8 +7,6 @@ const code = Astro.url.searchParams.get('code') || '';
 const error = Astro.url.searchParams.get('error') || '';
 
 if(error !== '') {
-    // todo, handle error 
-    // maybe a flash msg and back to index
     console.error('Error!!', error);
     Astro.session?.set('error',error);
     return Astro.redirect('/');
@@ -40,10 +38,6 @@ if(at.error) {
 }
 
 Astro.session?.set('access_token', at.access_token, { ttl: at.expires_in });
-// expires_in is in seconds, so let's create a date ob for it it
-let expiration = new Date();
-expiration.setSeconds(expiration.getSeconds() + at.expires_in);
-await Astro.session?.set('expiration', expiration);
 
 return Astro.redirect('/events');
 ---

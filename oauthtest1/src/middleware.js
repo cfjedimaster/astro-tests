@@ -5,9 +5,7 @@ If they don't have one and are ON /events, go to /
 
 export async function onRequest (context, next) {
 
-    console.log('mw!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     let token = await context.session.get('access_token');
-    console.log('token from mw');
     console.log('path', context.url.pathname);
 
     if(token) {
